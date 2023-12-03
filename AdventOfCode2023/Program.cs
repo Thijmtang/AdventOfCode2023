@@ -10,18 +10,30 @@ public partial class Program
 {
     public static void Main()
     {
+
         // Day 1
-        // day1();
+        // day1_p1();
+        day1_p2();
 
-        day2_p2();
-
+        // day2_p2();
     }
 
-    public static void day1()
+    public static void day1_p1()
     {
         var file = FileUtils.ReadPuzzleFile(1);
-        Console.WriteLine(AdventOfcode.sumCalibrationValues(file));
+        var output = AdventOfcode.sumCalibrationValues(file);
+        Console.WriteLine(output);
+
     }
+
+    public static void day1_p2()
+    {
+        var file = FileUtils.ReadPuzzleFile(1);
+        var output = AdventOfcode.sumCalibrationValues(file, true);
+        Console.WriteLine(output);
+
+    }
+
 
     public static void day2_p1()
     {

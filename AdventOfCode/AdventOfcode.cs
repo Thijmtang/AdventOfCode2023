@@ -8,34 +8,48 @@ namespace AdventOfCode
 {
     public static class AdventOfcode
     {
-        public static int sumCalibrationValues(List<string> input)
+        public static int sumCalibrationValues(List<string> input, bool hiddenDigits = false)
         {
             int sum = 0;
-            
-            foreach (string line in input)
+
+            for (int i = 0; i < input.Count; i++)
             {
+
+                var line = input[i];
                 int first = 0;
                 int last = 0;
-
-
+                
+                if (hiddenDigits)
+                {
+                    line = line.Replace("one", "o1e")
+                        .Replace("two", "t2o")
+                        .Replace("three", "t3e")
+                        .Replace("four", "f4r")
+                        .Replace("five", "f5e")
+                        .Replace("six", "s6x")
+                        .Replace("seven", "s7n")
+                        .Replace("eight", "e8t")
+                        .Replace("nine", "n9e");
+                }
+                
                 foreach (char c in line)
                 {
-                    if (!System.Char.IsDigit(c))
+                    if (!char.IsDigit(c))
                     {
                         continue;
                     }
-
+                
                     if (first == 0)
                     {
                         first = int.Parse(c.ToString());
                     }
-
-
+                
+                
                     last = int.Parse(c.ToString());
                 }
-
+                
                 int combo = int.Parse($"{first}{last}");
-
+                
                 sum += combo;
 
             }
@@ -51,7 +65,7 @@ namespace AdventOfCode
             foreach (string line in input)
             {
                 var inputLine = line.Split(":");
-                
+
                 int gameId = int.Parse(inputLine[0].Split(" ")[1]);
 
                 var gameContent = inputLine[1];
@@ -68,22 +82,22 @@ namespace AdventOfCode
 
                     // Composition: {amount Color}, {amount Color}, 
                     var cubesSubset = subset.Split(",");
-                    
+
                     foreach (var clrSetPair in cubesSubset)
                     {
                         // Composition: amount Color
                         var content = clrSetPair.Substring(1).Split(" ");
-                        
+
                         string color = content[1];
                         int amount = int.Parse(content[0]);
 
 
-                        
+
                         if (bagContent[color] < amount)
                         {
                             possible = false;
                         }
-                    
+
                     }
                 }
 
@@ -150,7 +164,7 @@ namespace AdventOfCode
                                 minimalCubesRequired["green"];
 
 
-              
+
                 sum += cubePower;
 
 
