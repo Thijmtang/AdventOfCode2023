@@ -19,10 +19,11 @@ public partial class Program
         // day2_p2();
 
         // Day 3
+        day3_p1();
 
         // Day 4
         // day4_p1();
-        day4_p2();
+        // day4_p2();
     }
 
 
@@ -72,10 +73,10 @@ public partial class Program
     public static void day3_p1()
     {
         var file = FileUtils.ReadPuzzleFile(3);
-        // var result = AdventOfCode.
+        var output = AdventOfcode.sumPartsNumbers(file);
 
+        Console.WriteLine(output);
     }
-
 
     public static void day4_p1()
     {

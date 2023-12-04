@@ -1,4 +1,6 @@
-﻿using AdventOfCode.Models;
+﻿using System.ComponentModel;
+using AdventOfCode.Models;
+using AdventOfCode.Utils;
 
 namespace AdventOfCode
 {
@@ -167,13 +169,40 @@ namespace AdventOfCode
         public static int sumPartsNumbers(List<string> input)
         {
             int sum = 0;
+            var currentNumber = "";
+            var hasPartNumber = false;
 
+            for (int y = 0; y < input.Count; y++)
+            {
 
+                for (int x = 0; x < input[y].Length; x++)
+                {
+                    var c = input[y][x];
 
+                    if (char.IsDigit(c))
+                    {
+                        currentNumber += c;
 
+                        // Part has already been set, numbers with multiple digits are not within eachother's range
+                        if (!hasPartNumber)
+                        {
+                            hasPartNumber = Day3Utils.isPartNumber(y, x, input);
+                        }
 
+                        continue;
+                    }
 
+                    // Number was adjacent to a symbol
+                    if (hasPartNumber && currentNumber != "")
+                    {
+                        sum += int.Parse(currentNumber);
+                    }
 
+                    // Reset since the digits of the number has ended
+                    currentNumber = "";
+                    hasPartNumber = false;
+                }
+            }
 
             return sum;
         }
@@ -204,7 +233,7 @@ namespace AdventOfCode
                 foreach (var number in cardNumbers)
                 {
                     if (number == " " || !winningNumbers.Contains(number))
-                    {
+                    { 
                         continue;
                     }
 
@@ -227,9 +256,6 @@ namespace AdventOfCode
         public static int countWonScratchCards(List<string> input)
         {
             int sum = 0;
-
-
-
 
             // Create hashmap with all available scratchcards, for easy accessibility
             var scratchCardPile = new Dictionary<int, ScratchCard>();
