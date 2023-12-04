@@ -8,11 +8,8 @@ public static class FileUtils
         var ds = Path.DirectorySeparatorChar;
         var filePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + ds +
                        "AdventOfCode" + ds;
-
-
         var path = filePath + ds + "PuzzleInput" +
                    ds + "day-" + day;
-
 
         try
         {

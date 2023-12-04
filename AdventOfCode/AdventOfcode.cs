@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AdventOfCode.Models;
 
 namespace AdventOfCode
 {
@@ -18,7 +14,7 @@ namespace AdventOfCode
                 var line = input[i];
                 int first = 0;
                 int last = 0;
-                
+
                 if (hiddenDigits)
                 {
                     line = line.Replace("one", "o1e")
@@ -31,27 +27,26 @@ namespace AdventOfCode
                         .Replace("eight", "e8t")
                         .Replace("nine", "n9e");
                 }
-                
+
                 foreach (char c in line)
                 {
                     if (!char.IsDigit(c))
                     {
                         continue;
                     }
-                
+
                     if (first == 0)
                     {
                         first = int.Parse(c.ToString());
                     }
-                
-                
+
+
                     last = int.Parse(c.ToString());
                 }
-                
-                int combo = int.Parse($"{first}{last}");
-                
-                sum += combo;
 
+                int combo = int.Parse($"{first}{last}");
+
+                sum += combo;
             }
 
             return sum;
@@ -88,8 +83,8 @@ namespace AdventOfCode
                         // Composition: amount Color
                         var content = clrSetPair.Substring(1).Split(" ");
 
-                        string color = content[1];
                         int amount = int.Parse(content[0]);
+                        string color = content[1];
 
 
 
@@ -163,14 +158,152 @@ namespace AdventOfCode
                 int cubePower = minimalCubesRequired["red"] * minimalCubesRequired["blue"] *
                                 minimalCubesRequired["green"];
 
-
-
                 sum += cubePower;
-
-
             }
 
             return sum;
         }
+
+        public static int sumPartsNumbers(List<string> input)
+        {
+            int sum = 0;
+
+
+
+
+
+
+
+
+            return sum;
+        }
+
+
+        public static int countScratchCardsPoints(List<string> input)
+        {
+            int sum = 0;
+
+            for (int i = 0; i < input.Count; i++)
+            {
+                int points = 0;
+
+                var line = input[i].Split(":");
+                var cardNumber = line[0];
+
+                var scratchCard = line[1].Split("|");
+
+                // Turn into dictionary to easily access values
+                var winningNumbers = new HashSet<String>(scratchCard[1].Split(" "));
+
+                // Tidy up, empty values
+                winningNumbers.Remove(" ");
+                winningNumbers.Remove("");
+
+                var cardNumbers = scratchCard[0].Split(" ");
+
+                foreach (var number in cardNumbers)
+                {
+                    if (number == " " || !winningNumbers.Contains(number))
+                    {
+                        continue;
+                    }
+
+                    if (points == 0)
+                    {
+                        points = 1;
+                        continue;
+                    }
+
+                    points *= 2;
+                }
+
+                sum += points;
+            }
+
+
+            return sum;
+        }
+
+        public static int countWonScratchCards(List<string> input)
+        {
+            int sum = 0;
+
+
+
+
+            // Create hashmap with all available scratchcards, for easy accessibility
+            var scratchCardPile = new Dictionary<int, ScratchCard>();
+            var scratchCardCount = new Dictionary<int, int>();
+
+            for (int i = 0; i < input.Count; i++)
+            {
+                var line = input[i].Split(":");
+
+                var cardNumber = i + 1;
+                var scratchCard = line[1].Split("|");
+
+                var winningNumbers = new HashSet<String>(scratchCard[1].Split(" "));
+
+                // Tidy up, empty values
+                winningNumbers.Remove(" ");
+                winningNumbers.Remove("");
+
+                var cardNumbers = new HashSet<String>(scratchCard[0].Split(" "));
+
+                // Tidy up, empty values
+                cardNumbers.Remove(" ");
+                cardNumbers.Remove("");
+
+                scratchCardPile[cardNumber] = new ScratchCard(cardNumber, winningNumbers, cardNumbers);
+                scratchCardCount[cardNumber] = 1;
+            }
+
+            var queue = new Queue<int>();
+
+            foreach (var entry in scratchCardPile)
+            {
+                var card = entry.Value;
+                var cardWinnings = card.getWonCards();
+
+                // Initiate queue for all won cards of current entry
+                foreach (var wonCard in cardWinnings)
+                {
+                    queue.Enqueue(wonCard);
+                }
+
+                // Process all cards and each of its card winnings
+                while (queue.Count > 0)
+                {
+                    var cardNumber = queue.Dequeue();
+                    var copyCard = scratchCardPile[cardNumber];
+
+                    // Keep track of the ran through card
+                    scratchCardCount[cardNumber]++;
+
+                    var copyCardWinnings = copyCard.getWonCards();
+
+                    // No cards won, no need to continue
+                    if (copyCardWinnings.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    // Add the winnings to the queue
+                    foreach (var wonCard in copyCardWinnings)
+                    {
+                        queue.Enqueue(wonCard);
+                    }
+                }
+            }
+
+            foreach (var entry in scratchCardCount)
+            {
+                Console.WriteLine($"Card: {entry.Key} : {entry.Value}*");
+                sum += entry.Value;
+            }
+
+            return sum;
+        }
+
     }
 }
